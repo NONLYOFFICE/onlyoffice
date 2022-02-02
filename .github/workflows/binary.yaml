@@ -1,6 +1,4 @@
 name: "Build Binary"
-
-name: Sync Fork
 on:
   workflow_dispatch: # on button click
 
