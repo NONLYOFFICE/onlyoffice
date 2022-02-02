@@ -6,7 +6,7 @@ jobs:
   build_binary:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/truecharts/nonlyoffice_build:latest
+      image: nonlyoffice-build:latest
     steps:
       - run: |
           rm -Rf /build_tools/out
