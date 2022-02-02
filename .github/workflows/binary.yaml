@@ -1,25 +1,29 @@
-name: "Build Binary"
+name: "Build OnlyOffice"
 on:
   workflow_dispatch: # on button click
 
 jobs:
-  build_binary:
+  build:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/truecharts/nonlyoffice-build:latest
     steps:
-      - run: |
-          rm -Rf /build_tools/out
       - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2
         name: Checkout
         with:
-          path: catalog /build_tools/out
+          path: /binrepo
           token: ${{ secrets.GITHUB_TOKEN }}
-      - run: |
+      - name: "Build binaries"
+        run: |
           cd "/build_tools/tools/linux"
           python3 ./automate.py server
           ls "/build_tools/out"
-          cd /build_tools/out
+      - name: "Move binaries to repo"
+        run: |
+          mv "/build_tools/out" "/binrepo/bin"
+      - name: "Push binaries to repo"
+        run: |
+          cd /binrepo
           git add --all
           git commit -sm "Commit new binaries" || exit 0
           git push
