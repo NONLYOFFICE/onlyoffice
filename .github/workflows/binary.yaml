@@ -1,0 +1,27 @@
+name: "Build Binary"
+
+name: Sync Fork
+on:
+  workflow_dispatch: # on button click
+
+jobs:
+  build_binary:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/truecharts/nonlyoffice_build:latest
+    steps:
+      - run: |
+          rm -Rf /build_tools/out
+      - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2
+        name: Checkout
+        with:
+          path: catalog /build_tools/out
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - run: |
+          cd "/build_tools/tools/linux"
+          python3 ./automate.py server
+          ls "/build_tools/out"
+          cd /build_tools/out
+          git add --all
+          git commit -sm "Commit new binaries" || exit 0
+          git push
