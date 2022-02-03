@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2
         name: Checkout
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.BOT_TOKEN }}
       - name: "Build binaries"
         run: |
           cd "/build_tools/tools/linux"
@@ -23,6 +23,8 @@ jobs:
       - name: "Push binaries to repo"
         run: |
           cd ${GITHUB_WORKSPACE}
+          git config user.name "TrueCharts-Bot"
+          git config user.email "bot@truecharts.org"
           git add --all
           git commit -sm "Commit new binaries" || exit 0
           git push
