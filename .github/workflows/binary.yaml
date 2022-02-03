@@ -1,5 +1,6 @@
 name: "Build OnlyOffice"
 on:
+  push:
   workflow_dispatch: # on button click
 
 jobs:
