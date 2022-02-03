@@ -20,6 +20,9 @@ jobs:
       - name: "Move binaries to repo"
         run: |
           mv "/build_tools/out" "${GITHUB_WORKSPACE}/bin"
+          cd "${GITHUB_WORKSPACE}/bin"
+          find . -name ".git" -type f -print0 | xargs -0 /bin/rm -f
+          find . -name "*.git" -type f -print0 | xargs -0 /bin/rm -f
       - name: "Push binaries to repo"
         run: |
           cd ${GITHUB_WORKSPACE}
