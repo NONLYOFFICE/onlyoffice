@@ -26,9 +26,7 @@ jobs:
           PRODUCT_VERSION: '7.0.0'
           BUILD_NUMBER: '132-truecharts'
         run: |
-          cd /
-          git clone https://github.com/ONLYOFFICE/document-server-package.git
-          cd document-server-package/deb
+          cd /document-server-package/deb
           apt build-dep ./
           cd /document-server-package
           # Workaround for my system where uname -p says: unknown
@@ -36,14 +34,11 @@ jobs:
           # Workaround to avoid ending with an error
           sed -i 's/--changes-option=-u./--changes-option=-u. --buildinfo-option=-u./g' Makefile
           make deb
-      - name: "Move binaries to repo"
-        run: |
-          mv "/document-server-package/deb" "${GITHUB_WORKSPACE}/bin"
-      - name: "Push binaries to repo"
-        run: |
-          cd ${GITHUB_WORKSPACE}
-          git config user.name "TrueCharts-Bot"
-          git config user.email "bot@truecharts.org"
-          git add --all
-          git commit -sm "Commit new binaries" || exit 0
-          git push
+          ls /document-server-package/deb
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.BOT_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          files: |
+            /document-server-package/deb/*.deb
