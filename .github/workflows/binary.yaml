@@ -13,11 +13,18 @@ jobs:
         with:
           token: ${{ secrets.BOT_TOKEN }}
       - name: "Build binaries"
+        env:
+          PRODUCT_VERSION: '7.0.0'
+          BUILD_NUMBER: '132'
+          NODE_ENV: 'production'
         run: |
           cd "/build_tools/tools/linux"
           python3 ./automate.py server
           ls "/build_tools/out"
       - name: "Build Package"
+        env:
+          PRODUCT_VERSION: '7.0.0'
+          BUILD_NUMBER: '132-truecharts'
         run: |
           cd /
           git clone https://github.com/ONLYOFFICE/document-server-package.git
