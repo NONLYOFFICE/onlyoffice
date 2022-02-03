@@ -17,12 +17,21 @@ jobs:
           cd "/build_tools/tools/linux"
           python3 ./automate.py server
           ls "/build_tools/out"
+      - name: "Build Package"
+        run: |
+          cd /
+          git clone https://github.com/ONLYOFFICE/document-server-package.git
+          cd document-server-package/deb
+          apt build-dep ./
+          cd /document-server-package
+          # Workaround for my system where uname -p says: unknown
+          # sed -i 's/TARGET := $(PLATFORM)_$(ARCHITECTURE)/TARGET := $(PLATFORM)_64/g' Makefile
+          # Workaround to avoid ending with an error
+          sed -i 's/--changes-option=-u./--changes-option=-u. --buildinfo-option=-u./g' Makefile
+          make deb
       - name: "Move binaries to repo"
         run: |
-          mv "/build_tools/out" "${GITHUB_WORKSPACE}/bin"
-          cd "${GITHUB_WORKSPACE}/bin"
-          find . -name ".git" -type f -print0 | xargs -0 /bin/rm -f
-          find . -name "*.git" -type f -print0 | xargs -0 /bin/rm -f
+          mv "/document-server-package/deb" "${GITHUB_WORKSPACE}/bin"
       - name: "Push binaries to repo"
         run: |
           cd ${GITHUB_WORKSPACE}
