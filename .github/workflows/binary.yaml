@@ -20,7 +20,7 @@ jobs:
         run: |
           VER=$(cat VERSION)
           echo "VERSION=$VER" >> $GITHUB_ENV
-          VER=$(cat BUILD)
+          BLD=$(cat BUILD)
           echo "BUILD=$BLD" >> $GITHUB_ENV
       - name: "Build binaries"
         env:
