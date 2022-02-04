@@ -2,7 +2,7 @@ name: "Build OnlyOffice"
 on:
   push:
     branches:
-      - 'master'
+      - 'main'
     tags-ignore:
       - '**'
 
