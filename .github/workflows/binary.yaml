@@ -34,7 +34,7 @@ jobs:
       - name: "Build Package"
         env:
           PRODUCT_VERSION: '${{ env.VERSION }}'
-          BUILD_NUMBER: '-truecharts'
+          BUILD_NUMBER: 'truecharts'
         run: |
           cd /document-server-package
           # Workaround to avoid ending with an error
