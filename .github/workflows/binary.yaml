@@ -16,10 +16,16 @@ jobs:
         name: Checkout
         with:
           token: ${{ secrets.BOT_TOKEN }}
+      - name: Set variables
+        run: |
+          VER=$(cat VERSION)
+          echo "VERSION=$VER" >> $GITHUB_ENV
+          VER=$(cat BUILD)
+          echo "BUILD=$BLD" >> $GITHUB_ENV
       - name: "Build binaries"
         env:
-          PRODUCT_VERSION: '7.0.0'
-          BUILD_NUMBER: '132'
+          PRODUCT_VERSION: '${{ env.VERSION }}'
+          BUILD_NUMBER: '${{ env.BUILD }}'
           NODE_ENV: 'production'
         run: |
           cd "/build_tools/tools/linux"
@@ -27,12 +33,10 @@ jobs:
           ls "/build_tools/out"
       - name: "Build Package"
         env:
-          PRODUCT_VERSION: '7.0.0'
-          BUILD_NUMBER: '132-truecharts'
+          PRODUCT_VERSION: '${{ env.VERSION }}'
+          BUILD_NUMBER: '-truecharts'
         run: |
           cd /document-server-package
-          # Workaround for my system where uname -p says: unknown
-          # sed -i 's/TARGET := $(PLATFORM)_$(ARCHITECTURE)/TARGET := $(PLATFORM)_64/g' Makefile
           # Workaround to avoid ending with an error
           sed -i 's/--changes-option=-u./--changes-option=-u. --buildinfo-option=-u./g' Makefile
           make deb
@@ -40,7 +44,6 @@ jobs:
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.BOT_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
+          automatic_release_tag: "${{ env.VERSION }}"
           files: |
             /document-server-package/deb/*.deb
